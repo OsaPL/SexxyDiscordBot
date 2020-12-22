@@ -45,11 +45,6 @@ namespace Sexxy_Discord_Bot
 
             // Block the program until it is closed.
             await Task.Delay(Timeout.Infinite);
-
-            if (!File.Exists(_usersFile))
-            {
-                File.Create(_usersFile);
-            }
         }
 
         private Task LogAsync(LogMessage log)
@@ -73,17 +68,20 @@ namespace Sexxy_Discord_Bot
         {
             try
             {
+                //TODO! This 'if' for DMs only DOESNT WORK! WHY?
                 if (await message.Channel.GetUsersAsync().CountAsync() <= 1)
                 {
-                    if (await CheckIfAllowed(message.Author))
+                    if (message.Content.First() == '!')
                     {
-                        if (message.Content.First() == '!')
+                        if (await CheckIfAllowed(message.Author))
+                        {
                             await ParseMessage(message);
-                    }
-                    else
-                    {
-                        await message.Channel.SendMessageAsync(
-                            $"You're not allowed to use me. Id:`{message.Author.Id}`");
+                        }
+                        else
+                        {
+                            await message.Channel.SendMessageAsync(
+                                $"You're not allowed to use me. Id:`{message.Author.Id}`");
+                        }
                     }
                 }
             }
@@ -98,6 +96,11 @@ namespace Sexxy_Discord_Bot
 
         private async Task<bool> CheckIfAllowed(SocketUser author)
         {
+            if (!File.Exists(_usersFile))
+            {
+                File.Create(_usersFile);
+            }
+            
             await LogAsync(new LogMessage(LogSeverity.Info, "CheckIfAllowed",
                 $"Checking if {author.Username}#{author.Id} can even use commands."));
             // The bot should never respond to itself.
@@ -149,6 +152,9 @@ namespace Sexxy_Discord_Bot
                     break;
                 case "starbound":
                     await ExecuteCommand("sudo systemctl restart starboundServer.service");
+                    break;
+                case "mc":
+                    await ExecuteCommand("sudo systemctl restart mcServer.service");
                     break;
             }
         }
