@@ -15,6 +15,8 @@ namespace Sexxy_Discord_Bot
 
         private string _token;
         private string _masterId;
+        
+        Random _rand = new Random();
 
         // Discord.Net heavily utilizes TAP for async, so we create
         // an asynchronous context from the beginning.
@@ -73,6 +75,18 @@ namespace Sexxy_Discord_Bot
                 {
                     if (message.Content.First() == '!')
                     {
+                        if (message.Content.ToLower() == "!givemes")
+                        {
+                            await message.Channel.SendMessageAsync(
+                                $"After analyzing {_rand.Next(1,20)} hours of audio and {_rand.Next(50,200)} messages, I created a personalized experience for you to reach enlightenment. \n <https://cutt.ly/lci6Oci>");
+                            return;
+                        }
+                        if (message.Content.ToLower() == "!dajmis")
+                        {
+                            await message.Channel.SendMessageAsync(
+                                $"Po analizie {_rand.Next(1,20)} godzin audio oraz {_rand.Next(50,200)} wiadomosci, stworzylem spersonalizowane doswiadczenie dla ciebie, bys mogl osiagnac oświecenie. \n <https://cutt.ly/lci6Oci>");
+                            return;
+                        }
                         if (await CheckIfAllowed(message.Author))
                         {
                             await ParseMessage(message);
