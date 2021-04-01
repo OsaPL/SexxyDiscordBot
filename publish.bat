@@ -1,0 +1,1 @@
+﻿dotnet publish --self-contained true -r linux-x64
